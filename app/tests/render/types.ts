@@ -1,6 +1,6 @@
 import type {TestRouter} from '@quilted/quilt/navigate/testing';
 import type {BrowserTestMock} from '@quilted/quilt/browser/testing';
-import type {GraphQLCache} from '@quilted/quilt/graphql';
+import type {AsyncActionCache} from '@quilted/quilt/async';
 
 import type {AppContext} from '~/shared/context.ts';
 
@@ -46,7 +46,7 @@ export interface RenderOptions {
    * The cache of GraphQL query results. When not provided, an empty cache
    * will be used.
    */
-  readonly graphQLCache?: GraphQLCache;
+  readonly asyncCache?: AsyncActionCache;
 
   /**
    * A custom locale to use for this component test.
@@ -73,7 +73,7 @@ export interface RenderContext extends AppContext {
   /**
    * The cache of GraphQL query results.
    */
-  readonly graphQLCache: GraphQLCache;
+  readonly asyncCache: AsyncActionCache;
 }
 
 export interface RenderActions extends Record<string, never> {}

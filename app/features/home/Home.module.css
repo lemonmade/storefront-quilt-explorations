@@ -1,3 +1,24 @@
-.Home {
-  font-weight: 900;
+.ProductGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (min-width: 45em) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.Product {
+  text-decoration: none;
+  color: var(--x-text-color-auto);
+}
+
+.ProductImage {
+  inline-size: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+}
+
+.ProductTitle {
+  font-weight: var(--x-text-weight-strong);
 }

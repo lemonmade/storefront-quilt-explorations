@@ -1,49 +1,44 @@
 import '@quilted/quilt/globals';
 
-import {RequestRouter, JSONResponse} from '@quilted/quilt/request-router';
-import {Router} from '@quilted/quilt/navigate';
+import {RequestRouter} from '@quilted/quilt/request-router';
 import {BrowserAssets} from 'quilt:module/assets';
-
-import type {AppContext} from '~/shared/context.ts';
 
 const router = new RequestRouter();
 const assets = new BrowserAssets();
 
-// GraphQL API, called from the client
-router.post('/api/graphql', async (request) => {
-  const [{query, operationName, variables}, {performGraphQLOperation}] =
-    await Promise.all([request.json(), import('./server/graphql.ts')]);
-
-  const result = await performGraphQLOperation(query, {
-    variables,
-    operationName,
-  });
-
-  return new JSONResponse(result);
-});
-
 // For all GET requests, render our React application.
 router.get(async (request) => {
-  const [{App}, {performGraphQLOperation}, {GraphQLCache}, {renderToResponse}] =
-    await Promise.all([
-      import('./App.tsx'),
-      import('./server/graphql.ts'),
-      import('@quilted/quilt/graphql'),
-      import('@quilted/quilt/server'),
-    ]);
+  const [
+    {App},
+    {createStorefrontGraphQLFetch},
+    {renderToResponse},
+    {GraphQLCache},
+  ] = await Promise.all([
+    import('./App.tsx'),
+    import('@lemonmade/shopify/storefront'),
+    import('@quilted/quilt/server'),
+    import('@quilted/quilt/graphql'),
+  ]);
 
-  const context = {
-    router: new Router(request.url),
-    graphql: {
-      fetch: performGraphQLOperation,
-      cache: new GraphQLCache(),
-    },
-  } satisfies AppContext;
-
-  const response = await renderToResponse(<App context={context} />, {
-    request,
-    assets,
+  const graphQLFetch = createStorefrontGraphQLFetch({
+    shop: 'admin4.myshopify.com',
+    accessToken: 'c6f362765d5020a5c0b71303a6b06129',
   });
+
+  const response = await renderToResponse(
+    <App
+      context={{
+        graphql: {
+          fetch: graphQLFetch,
+          cache: new GraphQLCache({fetch: graphQLFetch}),
+        },
+      }}
+    />,
+    {
+      request,
+      assets,
+    },
+  );
 
   return response;
 });

@@ -1,14 +1,19 @@
 import type {RenderableProps} from 'preact';
 
-import {NotFound} from '@quilted/quilt/server';
 import {GraphQLContext} from '@quilted/quilt/graphql';
 import {Navigation, route} from '@quilted/quilt/navigate';
 import {Localization, useLocaleFromEnvironment} from '@quilted/quilt/localize';
+import {NotFound} from '@quilted/quilt/server';
 
 import {HTML} from './foundation/html.ts';
 import {Frame} from './foundation/frame.ts';
 
-import {Home, homeQuery} from './features/home.ts';
+import {Home} from './features/home.ts';
+import {
+  ProductDetails,
+  productsQuery,
+  type ProductDetailsQueryVariables,
+} from './features/products.ts';
 
 import {
   AppContextReact,
@@ -19,17 +24,33 @@ export interface AppProps {
   context: AppContextType;
 }
 
-// Define the routes for your application. If you have a lot of routes, you
-// might want to split this into a separate file.
 const routes = [
   route('*', {
     render: (children) => <Frame>{children}</Frame>,
     children: [
       route('/', {
-        async load(_navigation, {graphql}: AppContextType) {
-          await Promise.all([Home.load(), graphql.cache.query(homeQuery)]);
+        async load() {
+          await Promise.all([Home.load()]);
         },
         render: <Home />,
+      }),
+      route('products', {
+        children: [
+          route<void, ProductDetailsQueryVariables, AppContextType>(':handle', {
+            input({matched}) {
+              return {handle: matched};
+            },
+            async load({input}, {graphql}) {
+              await Promise.all([
+                ProductDetails.load(),
+                graphql.cache.query(productsQuery, {
+                  variables: input,
+                }),
+              ]);
+            },
+            render: (_, {input}) => <ProductDetails handle={input.handle} />,
+          }),
+        ],
       }),
       route('*', {render: <NotFound />}),
     ],
@@ -42,7 +63,7 @@ export function App({context}: AppProps) {
   return (
     <AppContext context={context}>
       <HTML>
-        <Navigation router={context.router} routes={routes} context={context} />
+        <Navigation routes={routes} context={context} />
       </HTML>
     </AppContext>
   );
