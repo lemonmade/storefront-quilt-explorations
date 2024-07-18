@@ -1,0 +1,5 @@
+query Home {
+  me {
+    name
+  }
+}
