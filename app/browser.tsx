@@ -7,6 +7,7 @@ import '@quilted/quilt/globals';
 import {hydrate} from 'preact';
 import {GraphQLCache} from '@quilted/quilt/graphql';
 import {Browser, BrowserContext} from '@quilted/quilt/browser';
+import {Router} from '@quilted/quilt/navigate';
 import {createStorefrontGraphQLFetch} from '@lemonmade/shopify/storefront';
 
 import type {AppContext} from '~/shared/context.ts';
@@ -15,6 +16,10 @@ import {App} from './App.tsx';
 
 const element = document.querySelector('#app')!;
 const browser = new Browser();
+const url = new URL(browser.request.url);
+const router = new Router(url, {
+  base: `/${url.pathname.split('/').at(1)}`,
+});
 
 const graphQLFetch = createStorefrontGraphQLFetch({
   shop: 'admin4.myshopify.com',
@@ -28,6 +33,7 @@ graphQLCache.query(`query { shop { name } }`).then((result) => {
 });
 
 const context = {
+  router,
   graphql: {
     fetch: graphQLFetch,
     cache: graphQLCache,

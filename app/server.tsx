@@ -13,12 +13,18 @@ router.get(async (request) => {
     {createStorefrontGraphQLFetch},
     {renderToResponse},
     {GraphQLCache},
+    {Router},
   ] = await Promise.all([
     import('./App.tsx'),
     import('@lemonmade/shopify/storefront'),
     import('@quilted/quilt/server'),
     import('@quilted/quilt/graphql'),
+    import('@quilted/quilt/navigate'),
   ]);
+
+  const router = new Router(request.URL, {
+    base: `/${request.URL.pathname.split('/').at(1)}`,
+  });
 
   const graphQLFetch = createStorefrontGraphQLFetch({
     shop: 'admin4.myshopify.com',
@@ -28,6 +34,7 @@ router.get(async (request) => {
   const response = await renderToResponse(
     <App
       context={{
+        router,
         graphql: {
           fetch: graphQLFetch,
           cache: new GraphQLCache({fetch: graphQLFetch}),
