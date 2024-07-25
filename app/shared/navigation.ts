@@ -1,4 +1,4 @@
-import type {Router} from '@quilted/quilt/navigate';
+import type {Router} from '@quilted/quilt/navigation';
 
 declare module '~/shared/context.ts' {
   interface AppContext {

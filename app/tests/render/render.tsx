@@ -2,7 +2,7 @@ import {Suspense} from 'preact/compat';
 
 import {createRender} from '@quilted/quilt/testing';
 import {BrowserContext, BrowserTestMock} from '@quilted/quilt/browser/testing';
-import {TestRouting, TestRouter} from '@quilted/quilt/navigate/testing';
+import {Navigation, TestRouter} from '@quilted/quilt/navigation/testing';
 import {Localization} from '@quilted/quilt/localize';
 import {AsyncActionCache, AsyncContext} from '@quilted/quilt/async';
 
@@ -47,13 +47,13 @@ export const renderApp = createRender<
       <AppContextReact.Provider value={context}>
         <BrowserContext browser={browser}>
           <Localization locale={locale}>
-            <TestRouting router={router}>
+            <Navigation router={router}>
               <GraphQLTesting controller={graphql}>
                 <AsyncContext cache={asyncCache}>
                   <Suspense fallback={null}>{element}</Suspense>
                 </AsyncContext>
               </GraphQLTesting>
-            </TestRouting>
+            </Navigation>
           </Localization>
         </BrowserContext>
       </AppContextReact.Provider>

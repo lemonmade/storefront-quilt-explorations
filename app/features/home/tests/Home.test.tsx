@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
 
-import {Link} from '@quilted/quilt/navigate';
+import {Link} from '@quilted/quilt/navigation';
 
 import {renderApp} from '~/tests/render.ts';
 import {fillGraphQL, GraphQLController} from '~/tests/graphql.ts';

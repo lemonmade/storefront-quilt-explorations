@@ -4,6 +4,7 @@
     "jsxImportSource": "preact",
     "paths": {
       "~/shared/*": ["./shared/*"],
+      "~/design-system.ts": ["./design-system.ts"],
       "~/tests/*": ["./tests/*"],
       "react": ["./node_modules/preact/compat"],
       "react-dom": ["./node_modules/preact/compat"]

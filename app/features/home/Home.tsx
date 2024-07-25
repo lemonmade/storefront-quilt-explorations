@@ -1,13 +1,10 @@
 import {useGraphQLQuery} from '@quilted/quilt/graphql';
-import {Link} from '@quilted/quilt/navigate';
 import {useLocale} from '@quilted/quilt/localize';
-import {useFormatMoney} from '@lemonmade/shopify-quilt';
 
 import {Title} from '~/shared/head.ts';
-import {Heading, Stack} from '~/shared/design-system.ts';
+import {Heading, Stack, ProductGrid, ProductGridItem} from '~/design-system.ts';
 
-import styles from './Home.module.css';
-import homeQuery, {type HomeQueryData} from './HomeQuery.graphql';
+import homeQuery from './HomeQuery.graphql';
 
 export function Home() {
   const locale = useLocale();
@@ -33,35 +30,13 @@ export function Home() {
       <Stack spacing>
         <Heading>Recommended products</Heading>
 
-        <div class={styles.ProductGrid}>
+        <ProductGrid>
           {products.nodes.map((product) => {
-            return <ProductCard product={product} />;
+            return <ProductGridItem product={product} />;
           })}
-        </div>
+        </ProductGrid>
       </Stack>
     </>
-  );
-}
-
-function ProductCard({product}: {product: HomeQueryData.Products.Nodes}) {
-  const {title, featuredImage, priceRange} = product;
-
-  const formatMoney = useFormatMoney();
-
-  return (
-    <Link class={styles.Product} to={`/products/${product.handle}`}>
-      {featuredImage ? (
-        <img
-          class={styles.ProductImage}
-          src={featuredImage.url}
-          alt={featuredImage.altText ?? ''}
-        />
-      ) : null}
-      <Stack spacing="small-200">
-        <div class={styles.ProductTitle}>{title}</div>
-        <small>{formatMoney(priceRange.minVariantPrice)}</small>
-      </Stack>
-    </Link>
   );
 }
 

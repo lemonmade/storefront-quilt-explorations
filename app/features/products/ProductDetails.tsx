@@ -1,5 +1,5 @@
 import {useGraphQLQuery} from '@quilted/quilt/graphql';
-import {Link} from '@quilted/quilt/navigate';
+import {Link} from '@quilted/quilt/navigation';
 
 import {Title} from '~/shared/head.ts';
 

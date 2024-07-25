@@ -64,7 +64,7 @@ function Headers() {
                 `${isHttps ? 'ws' : 'wss'}://localhost:*`,
                 'https://admin4.myshopify.com',
               ]
-            : undefined
+            : ['https://admin4.myshopify.com']
         }
         // Includes `'unsafe-inline'` because CSS is often necessary in development,
         // and can be difficult to avoid in production.
@@ -72,7 +72,7 @@ function Headers() {
         // Includes `data:` so that an inline image can be used for the favicon.
         // If you do not use the `emoji` or `blank` favicons in your app, and you
         // do not load any other images as data URIs, you can remove this directive.
-        imageSources={["'self'", 'data:']}
+        imageSources={["'self'", 'data:', 'https://cdn.shopify.com/']}
         // Don’t allow this page to be rendered as a frame from a different origin.
         frameAncestors={false}
         // Ensure that all requests made by this page are made over https, unless
