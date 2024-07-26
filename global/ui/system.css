@@ -9,7 +9,3 @@
   --x-text-weight-auto: 400;
   --x-text-weight-strong: 600;
 }
-
-@view-transition {
-  navigation: auto;
-}

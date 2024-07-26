@@ -1,0 +1,34 @@
+{
+  "name": "app-multi-page",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "rollup --config ./rollup.config.js",
+    "develop": "vite --config ./vite.config.js",
+    "test": "vitest --config ./vite.config.js",
+    "start": "node ./build/server/server.js"
+  },
+  "devDependencies": {
+    "graphql": "^16.9.0"
+  },
+  "sideEffects": [
+    "*.css",
+    "browser.tsx",
+    "../global/ui/styles.ts"
+  ],
+  "browserslist": {
+    "defaults": [
+      "defaults and not dead"
+    ],
+    "modules": [
+      "defaults and fully supports es6-module-dynamic-import"
+    ],
+    "evergreen": [
+      "last 1 firefox version",
+      "last 1 safari version",
+      "last 1 edge version",
+      "last 1 chrome version"
+    ]
+  }
+}

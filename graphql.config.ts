@@ -8,6 +8,10 @@ const configuration: Configuration = {
     quilt: {
       schema: [
         {kind: 'definitions', outputPath: 'app/graphql/storefront.schema.ts'},
+        {
+          kind: 'definitions',
+          outputPath: 'multi-page/graphql/storefront.schema.ts',
+        },
       ],
     },
   },
