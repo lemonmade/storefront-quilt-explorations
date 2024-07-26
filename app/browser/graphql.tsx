@@ -1,3 +1,4 @@
+// @ts-expect-error
 if (process.env.NODE_ENV === 'development') {
   await import('preact/debug');
 }

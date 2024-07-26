@@ -10,7 +10,7 @@
     "start": "node ./build/server/server.js"
   },
   "devDependencies": {
-    "graphql": "^16.8.0"
+    "graphql": "^16.9.0"
   },
   "sideEffects": [
     "*.css",
