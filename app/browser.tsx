@@ -1,4 +1,4 @@
-import './design-system/styles.ts';
+import '~/global/ui/styles.ts';
 
 const url = new URL(window.location.href);
 const firstPart = url.pathname.split('/')[1];

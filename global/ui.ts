@@ -1,6 +1,6 @@
 import type {} from '@quilted/quilt/globals';
 
-import './design-system/system.css';
+import './ui/system.css';
 
 export {Heading} from './ui/Heading.tsx';
 export {ProductGrid, ProductGridItem} from './ui/ProductGrid.tsx';
