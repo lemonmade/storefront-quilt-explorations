@@ -2,7 +2,7 @@ import {useGraphQLQuery} from '@quilted/quilt/graphql';
 import {useLocale} from '@quilted/quilt/localize';
 
 import {Title} from '~/shared/head.ts';
-import {Heading, Stack, ProductGrid, ProductGridItem} from '~/design-system.ts';
+import {Heading, Stack, ProductGrid, ProductGridItem} from '~/global/ui.ts';
 
 import homeQuery from './HomeQuery.graphql';
 

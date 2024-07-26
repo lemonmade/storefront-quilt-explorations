@@ -1,5 +1,6 @@
 import '@quilted/quilt/globals';
 
+import type {JSX} from 'preact';
 import {
   RequestRouter,
   type EnhancedRequest,

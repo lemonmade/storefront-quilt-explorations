@@ -4,7 +4,7 @@ import {createRender} from '@quilted/quilt/testing';
 import {BrowserContext, BrowserTestMock} from '@quilted/quilt/browser/testing';
 import {Navigation, TestRouter} from '@quilted/quilt/navigation/testing';
 import {Localization} from '@quilted/quilt/localize';
-import {AsyncActionCache, AsyncContext} from '@quilted/quilt/async';
+import {GraphQLCache} from '@quilted/quilt/graphql';
 
 import {AppContextReact} from '~/shared/context.ts';
 
@@ -29,29 +29,31 @@ export const renderApp = createRender<
     router = new TestRouter(),
     browser = new BrowserTestMock(),
     graphql = new GraphQLController(),
-    asyncCache = new AsyncActionCache(),
   }) {
     return {
       router,
       browser,
-      graphql,
-      fetchGraphQL: graphql.fetch,
-      asyncCache,
+      graphqlController: graphql,
+      graphql: {
+        fetch: graphql.fetch,
+        cache: new GraphQLCache({fetch: graphql.fetch}),
+      },
     };
   },
   // Render all of our app-wide context providers around each component under test.
   render(element, context, {locale = 'en'}) {
-    const {router, browser, graphql, asyncCache} = context;
+    const {router, browser, graphql, graphqlController} = context;
 
     return (
       <AppContextReact.Provider value={context}>
         <BrowserContext browser={browser}>
           <Localization locale={locale}>
             <Navigation router={router}>
-              <GraphQLTesting controller={graphql}>
-                <AsyncContext cache={asyncCache}>
-                  <Suspense fallback={null}>{element}</Suspense>
-                </AsyncContext>
+              <GraphQLTesting
+                controller={graphqlController}
+                cache={graphql.cache}
+              >
+                <Suspense fallback={null}>{element}</Suspense>
               </GraphQLTesting>
             </Navigation>
           </Localization>
@@ -66,7 +68,7 @@ export const renderApp = createRender<
     // once the data is ready.
 
     await wrapper.act(async () => {
-      await wrapper.context.graphql.resolveAll();
+      await wrapper.context.graphqlController.resolveAll();
     });
   },
 });
