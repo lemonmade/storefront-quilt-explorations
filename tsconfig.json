@@ -1,8 +1,9 @@
 {
   "extends": "@quilted/typescript/tsconfig.workspace.json",
+  "exclude": ["build"],
   "references": [
-    {"path": "./app"},
-    {"path": "./multi-page"},
+    {"path": "./app/graphql"},
+    {"path": "./app/multi-page"},
     {"path": "./global"}
   ]
 }

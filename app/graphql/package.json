@@ -1,5 +1,5 @@
 {
-  "name": "app-multi-page",
+  "name": "app-graphql",
   "type": "module",
   "version": "0.0.0",
   "private": true,
@@ -15,7 +15,7 @@
   "sideEffects": [
     "*.css",
     "browser.tsx",
-    "../global/ui/styles.ts"
+    "../../global/ui/styles.ts"
   ],
   "browserslist": {
     "defaults": [
