@@ -15,42 +15,38 @@ import type {AppContext} from '~/shared/context.ts';
 
 import {App} from './App.tsx';
 
-export function hydrateGraphQL() {
-  const element = document.querySelector('#app')!;
+const element = document.querySelector('#app')!;
 
-  const browser = new Browser();
-  const url = new URL(browser.request.url);
+const browser = new Browser();
+const url = new URL(browser.request.url);
 
-  const router = new Router(url, {
-    base: `/${url.pathname.split('/').at(1)}`,
-  });
+const router = new Router(url);
 
-  const graphQLFetch = createStorefrontGraphQLFetch({
-    shop: 'admin4.myshopify.com',
-    accessToken: 'c6f362765d5020a5c0b71303a6b06129',
-  });
+const graphQLFetch = createStorefrontGraphQLFetch({
+  shop: 'admin4.myshopify.com',
+  accessToken: 'c6f362765d5020a5c0b71303a6b06129',
+});
 
-  const graphQLCache = new GraphQLCache({fetch: graphQLFetch});
+const graphQLCache = new GraphQLCache({fetch: graphQLFetch});
 
-  graphQLCache.query(`query { shop { name } }`).then((result) => {
-    console.log(result);
-  });
+graphQLCache.query(`query { shop { id name } }`).then((result) => {
+  console.log(result);
+});
 
-  const context = {
-    router,
-    graphql: {
-      fetch: graphQLFetch,
-      cache: graphQLCache,
-    },
-  } satisfies AppContext;
+const context = {
+  router,
+  graphql: {
+    fetch: graphQLFetch,
+    cache: graphQLCache,
+  },
+} satisfies AppContext;
 
-  // Makes key parts of the app available in the browser console
-  Object.assign(globalThis, {app: context});
+// Makes key parts of the app available in the browser console
+Object.assign(globalThis, {app: context});
 
-  hydrate(
-    <BrowserContext browser={browser}>
-      <App context={context} />
-    </BrowserContext>,
-    element,
-  );
-}
+hydrate(
+  <BrowserContext browser={browser}>
+    <App context={context} />
+  </BrowserContext>,
+  element,
+);

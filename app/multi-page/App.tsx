@@ -1,24 +1,22 @@
 import type {RenderableProps} from 'preact';
 
-import {GraphQLContext} from '@quilted/quilt/graphql';
 import {Navigation, route} from '@quilted/quilt/navigation';
-import {Localization, useLocaleFromEnvironment} from '@quilted/quilt/localize';
+import {Localization} from '@quilted/quilt/localize';
 import {NotFound} from '@quilted/quilt/server';
+import {AsyncContext, type AsyncComponentProps} from '@quilted/quilt/async';
 
 import {HTML} from './foundation/html.ts';
 import {Frame} from './foundation/frame.ts';
 
-import {Home} from './features/home.ts';
-import {
-  ProductDetails,
-  productsQuery,
-  type ProductDetailsQueryVariables,
-} from './features/products.ts';
+import {Home, homeQuery} from './features/home.ts';
+import {ProductDetails, productDetailsQuery} from './features/products.ts';
 
 import {
   AppContextReact,
   type AppContext as AppContextType,
 } from './shared/context.ts';
+import {routeWithAppContext} from './shared/navigation.ts';
+import {Title} from './shared/head.ts';
 
 export interface AppProps {
   context: AppContextType;
@@ -28,24 +26,49 @@ const routes = [
   route('*', {
     render: (children) => <Frame>{children}</Frame>,
     children: [
-      route('/', {
-        async load() {},
-        render: <Home />,
+      routeWithAppContext('/', {
+        async load({context}) {
+          const [{data}] = await Promise.all([
+            context.graphql.cache.query(homeQuery, {
+              variables: {
+                country: 'CA',
+                language: context.browser.locale.value
+                  .split('-')[0]!
+                  .toUpperCase() as any,
+              },
+            }),
+          ]);
+
+          return data;
+        },
+        render: (_, {data}) =>
+          data ? (
+            <>
+              <Title>Home</Title>
+              <Home products={data.products} />
+            </>
+          ) : null,
       }),
       route('products', {
         children: [
-          route<void, ProductDetailsQueryVariables, AppContextType>(':handle', {
-            input({matched}) {
-              return {handle: matched};
-            },
-            async load({input}, {graphql}) {
-              await Promise.all([
-                graphql.cache.query(productsQuery, {
-                  variables: input,
+          routeWithAppContext(':handle', {
+            async load({context, matched}) {
+              const [{data}] = await Promise.all([
+                context.graphql.cache.query(productDetailsQuery, {
+                  variables: {handle: matched},
                 }),
+                ProductDetails.load(),
               ]);
+
+              return data;
             },
-            render: (_, {input}) => <ProductDetails handle={input.handle} />,
+            render: (_, {data}) =>
+              data ? (
+                <>
+                  <Title>{data.product?.title}</Title>
+                  <ProductDetails product={data.product} />
+                </>
+              ) : null,
           }),
         ],
       }),
@@ -70,16 +93,34 @@ export default App;
 
 // This component renders any app-wide context.
 function AppContext({children, context}: RenderableProps<AppProps>) {
-  const locale = useLocaleFromEnvironment() ?? 'en';
-
   return (
     <AppContextReact.Provider value={context}>
-      <GraphQLContext
-        fetch={context.graphql.fetch}
-        cache={context.graphql.cache}
-      >
-        <Localization locale={locale}>{children}</Localization>
-      </GraphQLContext>
+      <AsyncContext components={{render: renderAsyncComponent}}>
+        <Localization>{children}</Localization>
+      </AsyncContext>
     </AppContextReact.Provider>
   );
 }
+
+declare module 'preact' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'quilt-async-component': RenderableProps<{
+        module?: string;
+        props?: string;
+      }>;
+    }
+  }
+}
+
+const renderAsyncComponent: AsyncComponentProps<any>['render'] =
+  function renderAsyncComponent(element, {module, props}) {
+    return (
+      <quilt-async-component
+        module={module.id}
+        props={props ? JSON.stringify(props) : undefined}
+      >
+        {element}
+      </quilt-async-component>
+    );
+  };

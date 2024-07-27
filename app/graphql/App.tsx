@@ -2,7 +2,7 @@ import type {RenderableProps} from 'preact';
 
 import {GraphQLContext} from '@quilted/quilt/graphql';
 import {Navigation, route} from '@quilted/quilt/navigation';
-import {Localization, useLocaleFromEnvironment} from '@quilted/quilt/localize';
+import {Localization} from '@quilted/quilt/localize';
 import {NotFound} from '@quilted/quilt/server';
 
 import {HTML} from './foundation/html.ts';
@@ -73,15 +73,13 @@ export default App;
 
 // This component renders any app-wide context.
 function AppContext({children, context}: RenderableProps<AppProps>) {
-  const locale = useLocaleFromEnvironment() ?? 'en';
-
   return (
     <AppContextReact.Provider value={context}>
       <GraphQLContext
         fetch={context.graphql.fetch}
         cache={context.graphql.cache}
       >
-        <Localization locale={locale}>{children}</Localization>
+        <Localization>{children}</Localization>
       </GraphQLContext>
     </AppContextReact.Provider>
   );

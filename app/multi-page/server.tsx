@@ -5,6 +5,7 @@ import {
   RequestRouter,
   type EnhancedRequest,
 } from '@quilted/quilt/request-router';
+import {BrowserResponse} from '@quilted/quilt/server';
 import type {RenderToResponseOptions} from '@quilted/quilt/server';
 
 import {BrowserAssets} from 'quilt:module/assets';
@@ -138,6 +139,7 @@ async function renderToResponseAppUsingGraphQL(
     <App
       context={{
         router,
+        browser: new BrowserResponse({request}),
         graphql: {
           fetch: graphQLFetch,
           cache: new GraphQLCache({fetch: graphQLFetch}),

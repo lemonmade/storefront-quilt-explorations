@@ -1,42 +1,26 @@
-import {useGraphQLQuery} from '@quilted/quilt/graphql';
-import {useLocale} from '@quilted/quilt/localize';
+import {AsyncComponent} from '@quilted/quilt/async';
 
-import {Title} from '~/shared/head.ts';
 import {Heading, Stack, ProductGrid, ProductGridItem} from '~/global/ui.ts';
 
-import homeQuery from './HomeQuery.graphql';
+export const BigHomeWidget = AsyncComponent.from(
+  () => import('./BigHomeWidget.tsx'),
+);
 
-export function Home() {
-  const locale = useLocale();
+import type {HomeQueryData} from './HomeQuery.graphql';
 
-  const query = useGraphQLQuery(homeQuery, {
-    // Why do I have to provide language as a GraphQL enum?? I obviously have a locale,
-    // why can't I just use that?
-    // @ts-expect-error
-    variables: {country: 'CA', language: locale.split('-')[0].toUpperCase()},
-  });
-
-  const data = query.result?.data;
-
-  if (data == null) {
-    return null;
-  }
-
-  const {products} = data;
-
+export function Home({products}: Pick<HomeQueryData, 'products'>) {
   return (
-    <>
-      <Title>Home</Title>
-      <Stack spacing>
-        <Heading>Recommended products</Heading>
+    <Stack spacing>
+      <Heading>Recommended products!!</Heading>
 
-        <ProductGrid>
-          {products.nodes.map((product) => {
-            return <ProductGridItem product={product} />;
-          })}
-        </ProductGrid>
-      </Stack>
-    </>
+      <ProductGrid>
+        {products.nodes.map((product) => {
+          return <ProductGridItem product={product} />;
+        })}
+      </ProductGrid>
+
+      <BigHomeWidget />
+    </Stack>
   );
 }
 

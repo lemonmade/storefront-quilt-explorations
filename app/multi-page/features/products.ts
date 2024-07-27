@@ -1,7 +1,11 @@
-export {default as ProductDetails} from './products/ProductDetails.tsx';
+import {AsyncComponent} from '@quilted/quilt/async';
+
+export const ProductDetails = AsyncComponent.from(
+  () => import('./products/ProductDetails.tsx'),
+);
 
 export {
-  default as productsQuery,
+  default as productDetailsQuery,
   type ProductDetailsQueryData,
   type ProductDetailsQueryVariables,
 } from './products/ProductDetailsQuery.graphql';
