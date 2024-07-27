@@ -1,7 +1,4 @@
 import type {Router} from '@quilted/quilt/navigation';
-import {createContextRouteFunction} from '@quilted/quilt/navigation';
-
-import type {AppContext} from '~/shared/context.ts';
 
 declare module '~/shared/context.ts' {
   interface AppContext {
@@ -12,4 +9,5 @@ declare module '~/shared/context.ts' {
   }
 }
 
-export const routeWithAppContext = createContextRouteFunction<AppContext>();
+export {routeWithAppContext} from './navigation/route.ts';
+export {NotFound, notFoundRoute} from './navigation/NotFound.tsx';

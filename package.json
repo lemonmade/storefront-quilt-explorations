@@ -19,7 +19,7 @@
     "@lemonmade/shopify-quilt": "^0.1.1",
     "@quilted/graphql-tools": "^0.2.7",
     "@quilted/quilt": "^0.7.10",
-    "@quilted/quilt-rendering": "^0.1.0",
+    "@quilted/quilt-rendering": "^0.1.1",
     "@quilted/rollup": "^0.2.36",
     "@quilted/routing": "^0.4.2",
     "@quilted/typescript": "^0.4.1",

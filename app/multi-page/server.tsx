@@ -120,12 +120,16 @@ async function renderToResponseAppUsingGraphQL(
     {renderToResponse},
     {GraphQLCache},
     {Router},
+    {AsyncContext},
+    {AsyncComponentIslandsServerRenderer},
   ] = await Promise.all([
     import('./App.tsx'),
     import('@lemonmade/shopify/storefront'),
     import('@quilted/quilt/server'),
     import('@quilted/quilt/graphql'),
     import('@quilted/quilt/navigation'),
+    import('@quilted/quilt/async'),
+    import('@quilted/quilt-rendering/server'),
   ]);
 
   const router = new Router(request.URL);
@@ -136,16 +140,22 @@ async function renderToResponseAppUsingGraphQL(
   });
 
   const response = await renderToResponse(
-    <App
-      context={{
-        router,
-        browser: new BrowserResponse({request}),
-        graphql: {
-          fetch: graphQLFetch,
-          cache: new GraphQLCache({fetch: graphQLFetch}),
-        },
-      }}
-    />,
+    <AsyncContext
+      components={
+        new AsyncComponentIslandsServerRenderer({tagName: 'async-component'})
+      }
+    >
+      <App
+        context={{
+          router,
+          browser: new BrowserResponse({request}),
+          graphql: {
+            fetch: graphQLFetch,
+            cache: new GraphQLCache({fetch: graphQLFetch}),
+          },
+        }}
+      />
+    </AsyncContext>,
     {
       request,
       assets,
