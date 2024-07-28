@@ -135,8 +135,8 @@ async function renderToResponseAppUsingGraphQL(
   const router = new Router(request.URL);
 
   const graphQLFetch = createStorefrontGraphQLFetch({
-    shop: 'admin4.myshopify.com',
-    accessToken: 'c6f362765d5020a5c0b71303a6b06129',
+    shop: 'test-plus-shop.myshopify.com',
+    accessToken: 'dbca40c3712408375d56abe879e0ed81',
   });
 
   const response = await renderToResponse(

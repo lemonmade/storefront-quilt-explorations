@@ -1,3 +1,5 @@
+import '@quilted/quilt/globals';
+
 import '~/global/ui/styles.ts';
 import './styles/global.css';
 
