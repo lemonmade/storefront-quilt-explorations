@@ -1,6 +1,11 @@
 import type {RenderableProps} from 'preact';
 import Env from 'quilt:module/env';
-import {Title, Favicon, useBrowserRequest} from '@quilted/quilt/browser';
+import {
+  Title,
+  Favicon,
+  ThemeColor,
+  useBrowserRequest,
+} from '@quilted/quilt/browser';
 import {
   CacheControl,
   ResponseHeader,
@@ -158,6 +163,11 @@ function Head() {
        * by search engines.
        */}
       <SearchRobots index={false} follow={false} />
+
+      {/**
+       * Customizes the color of the UI around the page in some browsers.
+       */}
+      <ThemeColor value={'rgb(21, 85, 101)'} />
     </>
   );
 }
