@@ -121,7 +121,7 @@ async function renderToResponseAppUsingGraphQL(
     {GraphQLCache},
     {Router},
     {AsyncContext},
-    {AsyncComponentIslandsServerRenderer},
+    {AsyncComponentIslandServerRenderer},
   ] = await Promise.all([
     import('./App.tsx'),
     import('@lemonmade/shopify/storefront'),
@@ -140,11 +140,7 @@ async function renderToResponseAppUsingGraphQL(
   });
 
   const response = await renderToResponse(
-    <AsyncContext
-      components={
-        new AsyncComponentIslandsServerRenderer({tagName: 'async-component'})
-      }
-    >
+    <AsyncContext components={new AsyncComponentIslandServerRenderer()}>
       <App
         context={{
           router,

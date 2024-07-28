@@ -3,7 +3,7 @@ import './styles/global.css';
 
 import {Suspense} from 'preact/compat';
 import {
-  QuiltAsyncComponentElement,
+  AsyncComponentIslandElement,
   MultiPageAppRouter,
   MultiPageAppNavigation,
 } from '@quilted/quilt-rendering/browser';
@@ -16,8 +16,8 @@ console.log('Hydrating the multi-page app version of the storefront!');
 
 const router = new MultiPageAppRouter();
 
-QuiltAsyncComponentElement.registerComponent(BigHomeWidget);
-QuiltAsyncComponentElement.registerComponent(ProductDetails, {
+AsyncComponentIslandElement.registerComponent(BigHomeWidget);
+AsyncComponentIslandElement.registerComponent(ProductDetails, {
   render(element) {
     return (
       <MultiPageAppNavigation router={router}>
@@ -29,4 +29,4 @@ QuiltAsyncComponentElement.registerComponent(ProductDetails, {
   },
 });
 
-QuiltAsyncComponentElement.define('async-component');
+AsyncComponentIslandElement.define();
