@@ -2,5 +2,15 @@ query ProductDetails($handle: String!) {
   product(handle: $handle) {
     handle
     title
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+      maxVariantPrice {
+        amount
+        currencyCode
+      }
+    }
   }
 }
