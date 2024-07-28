@@ -6,6 +6,7 @@
   "scripts": {
     "build": "rollup --config ./rollup.config.js",
     "develop": "vite --config ./vite.config.js",
+    "develop:wrangler": "concurrently \"rollup --config ./rollup.config.js --watch\" \"wrangler pages dev build/public\"",
     "test": "vitest --config ./vite.config.js",
     "start": "node ./build/server/server.js"
   },

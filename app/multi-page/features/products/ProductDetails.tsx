@@ -1,39 +1,31 @@
-import {useEffect} from 'preact/hooks';
-
+import {Title} from '~/shared/head.ts';
 import {Link, useCurrentURL} from '@quilted/quilt/navigation';
-import {useSignal} from '@quilted/quilt/signals';
 import {useFormatMoney} from '@lemonmade/shopify-quilt';
 
 import type {ProductDetailsQueryData} from './ProductDetailsQuery.graphql';
+import {ThemeColor} from '@quilted/quilt/browser';
 
 export function ProductDetails({
   product,
-}: Pick<ProductDetailsQueryData, 'product'>) {
-  const count = useSignal(0);
+}: {
+  product: Required<ProductDetailsQueryData.Product>;
+}) {
   const url = useCurrentURL();
   const formatMoney = useFormatMoney();
-
-  useEffect(() => {
-    console.log('Rendered ProductDetails!');
-
-    const interval = setInterval(() => {
-      count.value += 1;
-    }, 1_000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   if (product == null) return null;
 
   return (
     <div>
+      <Title>{product.title}</Title>
+      {product.themeColor && <ThemeColor value={product.themeColor.value} />}
+
       <div>
         <Link to="/">Home</Link>
       </div>
-      <div>{count}</div>
-      <div>URL: {url.href}</div>
+      <div>URL: {url}</div>
+      <div>Theme color: {product.themeColor?.value ?? '<missing>'}</div>
+
       <div>
         {formatMoney(product.priceRange.minVariantPrice)}
         {' - '}

@@ -2,6 +2,9 @@ query ProductDetails($handle: String!) {
   product(handle: $handle) {
     handle
     title
+    themeColor: metafield(namespace: "custom", key: "theme_color") {
+      value
+    }
     priceRange {
       minVariantPrice {
         amount

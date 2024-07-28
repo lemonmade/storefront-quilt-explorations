@@ -1,8 +1,4 @@
-import {AsyncComponent} from '@quilted/quilt/async';
-
-export const ProductDetails = AsyncComponent.from(
-  () => import('./products/ProductDetails.tsx'),
-);
+export {ProductDetails} from './products/ProductDetails.tsx';
 
 export {
   default as productDetailsQuery,
