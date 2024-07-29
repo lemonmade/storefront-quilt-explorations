@@ -7,11 +7,41 @@ import {
 } from '@quilted/quilt/request-router';
 import {BrowserResponse} from '@quilted/quilt/server';
 import type {RenderToResponseOptions} from '@quilted/quilt/server';
+import {createStorefrontGraphQLFetch} from '@lemonmade/shopify/storefront';
 
 import {BrowserAssets} from 'quilt:module/assets';
 
 const router = new RequestRouter();
 const assets = new BrowserAssets();
+
+router.post('/buy-it-now', async (request) => {
+  const [formData, {default: buyItNowMutation}] = await Promise.all([
+    request.formData(),
+    import('./server/BuyItNowMutation.graphql'),
+  ]);
+
+  console.log(Object.fromEntries(formData.entries()));
+
+  const merchandiseId = formData.get('lines[0][merchandiseId]');
+
+  if (typeof merchandiseId !== 'string') return Response.redirect('/');
+
+  const fetchGraphQL = createGraphQLFetch();
+
+  const result = await fetchGraphQL(buyItNowMutation, {
+    variables: {
+      lines: [{merchandiseId, quantity: 1}],
+    },
+  });
+
+  const checkoutURL = result.data?.cartCreate?.cart?.checkoutUrl;
+
+  if (checkoutURL) {
+    return Response.redirect(checkoutURL);
+  }
+
+  return Response.redirect(request.headers.get('Referer') ?? '/');
+});
 
 router.get(async (request) => {
   const response = await renderToResponseAppUsingGraphQL(request, {
@@ -116,7 +146,6 @@ async function renderToResponseAppUsingGraphQL(
 ) {
   const [
     {App},
-    {createStorefrontGraphQLFetch},
     {renderToResponse},
     {GraphQLCache},
     {Router},
@@ -124,7 +153,6 @@ async function renderToResponseAppUsingGraphQL(
     {AsyncComponentIslandServerRenderer},
   ] = await Promise.all([
     import('./App.tsx'),
-    import('@lemonmade/shopify/storefront'),
     import('@quilted/quilt/server'),
     import('@quilted/quilt/graphql'),
     import('@quilted/quilt/navigation'),
@@ -134,10 +162,7 @@ async function renderToResponseAppUsingGraphQL(
 
   const router = new Router(request.URL);
 
-  const graphQLFetch = createStorefrontGraphQLFetch({
-    shop: 'test-plus-shop.myshopify.com',
-    accessToken: 'dbca40c3712408375d56abe879e0ed81',
-  });
+  const graphQLFetch = createGraphQLFetch();
 
   const response = await renderToResponse(
     <AsyncContext components={new AsyncComponentIslandServerRenderer()}>
@@ -160,6 +185,13 @@ async function renderToResponseAppUsingGraphQL(
   );
 
   return response;
+}
+
+function createGraphQLFetch() {
+  return createStorefrontGraphQLFetch({
+    shop: 'test-plus-shop.myshopify.com',
+    accessToken: 'dbca40c3712408375d56abe879e0ed81',
+  });
 }
 
 export default router;

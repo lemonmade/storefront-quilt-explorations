@@ -16,7 +16,7 @@ query Home($country: CountryCode, $language: LanguageCode)
   }
   # In Hydrogen, this query is deferred. Quilt doesn’t support streaming rendering like this...
   # but should it?
-  products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+  products(first: 20, sortKey: UPDATED_AT, reverse: true) {
     nodes {
       id
       title

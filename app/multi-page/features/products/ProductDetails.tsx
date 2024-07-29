@@ -1,6 +1,7 @@
-import {Title} from '~/shared/head.ts';
-import {Link, useCurrentURL} from '@quilted/quilt/navigation';
+import {useCurrentURL} from '@quilted/quilt/navigation';
 import {useFormatMoney} from '@lemonmade/shopify-quilt';
+
+import {Title} from '~/shared/head.ts';
 
 import type {ProductDetailsQueryData} from './ProductDetailsQuery.graphql';
 import {ThemeColor} from '@quilted/quilt/browser';
@@ -10,28 +11,113 @@ export function ProductDetails({
 }: {
   product: Required<ProductDetailsQueryData.Product>;
 }) {
-  const url = useCurrentURL();
   const formatMoney = useFormatMoney();
 
-  if (product == null) return null;
+  const selectedVariant =
+    product.variantBySelectedOptions ?? product.variants.nodes[0]!;
+  const selectedOptions = new Map(
+    selectedVariant.selectedOptions.map(({name, value}) => [name, value]),
+  );
 
   return (
-    <div>
+    <div id="page_ProductDetails">
       <Title>{product.title}</Title>
       {product.themeColor && <ThemeColor value={product.themeColor.value} />}
 
-      <div>
-        <Link to="/">Home</Link>
-      </div>
-      <div>URL: {url}</div>
-      <div>Theme color: {product.themeColor?.value ?? '<missing>'}</div>
+      <div class="ProductDetails">
+        {product.featuredImage && (
+          <div class="ProductDetails_Image">
+            <img
+              src={product.featuredImage.url}
+              alt={product.featuredImage.altText ?? ''}
+            />
+          </div>
+        )}
 
-      <div>
-        {formatMoney(product.priceRange.minVariantPrice)}
-        {' - '}
-        {formatMoney(product.priceRange.maxVariantPrice)}
+        <form class="ProductDetails_Content" action="/buy-it-now" method="post">
+          <input
+            type="hidden"
+            name="lines[0][merchandiseId]"
+            value={selectedVariant.id}
+          />
+
+          <h2>{product.title}</h2>
+          <p>{product.vendor}</p>
+
+          {product.options.map((option) => (
+            <ProductDetailsOption
+              option={option}
+              defaultValue={selectedOptions.get(option.name)}
+            />
+          ))}
+
+          <div>{formatMoney(selectedVariant.price)}</div>
+
+          <button type="submit">Buy it now</button>
+
+          <div
+            dangerouslySetInnerHTML={{__html: product.descriptionHtml}}
+          ></div>
+
+          <pre style={{marginTop: '2rem'}}>
+            {JSON.stringify(product, null, 2)}
+          </pre>
+        </form>
       </div>
     </div>
+  );
+}
+
+function ProductDetailsOption({
+  option,
+  defaultValue,
+}: {
+  option: ProductDetailsQueryData.Product.Options;
+  defaultValue?: string;
+}) {
+  const currentURL = useCurrentURL();
+
+  const name = `${option.name[0]!.toLowerCase()}${option.name.slice(1)}`;
+
+  if (option.values.length < 2) {
+    return (
+      <input
+        type="hidden"
+        name={`options[${option.name}]`}
+        value={option.values[0]}
+        selected
+      />
+    );
+  }
+
+  return (
+    <fieldset>
+      <legend>{option.name}</legend>
+
+      {option.values.map((value) => {
+        const targetURL = new URL(currentURL);
+        targetURL.searchParams.set(name, value);
+
+        return (
+          <label for={`option:${option.name}:${value}`}>
+            <input
+              key={value}
+              id={`option:${option.name}:${value}`}
+              name={`options[${option.name}]`}
+              type="radio"
+              value={value}
+              checked={value === defaultValue}
+              hx-get={targetURL.href.slice(targetURL.origin.length)}
+              hx-params="none"
+              hx-replace-url="true"
+              hx-target="#page_ProductDetails"
+              hx-swap="innerHTML"
+            ></input>
+            {value}
+          </label>
+        );
+      })}
+    </fieldset>
   );
 }
 

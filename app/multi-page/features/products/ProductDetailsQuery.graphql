@@ -1,9 +1,39 @@
-query ProductDetails($handle: String!) {
+query ProductDetails(
+  $handle: String!
+  $selectedOptions: [SelectedOptionInput!]!
+) {
   product(handle: $handle) {
+    id
     handle
     title
+    descriptionHtml
     themeColor: metafield(namespace: "custom", key: "theme_color") {
       value
+    }
+    vendor
+    featuredImage {
+      id
+      url
+      altText
+      width
+      height
+    }
+    variantBySelectedOptions(
+      ignoreUnknownOptions: true
+      caseInsensitiveMatch: true
+      selectedOptions: $selectedOptions
+    ) {
+      ...ProductDetailsVariant
+    }
+    variants(first: 1) {
+      nodes {
+        ...ProductDetailsVariant
+      }
+    }
+    options {
+      id
+      name
+      values
     }
     priceRange {
       minVariantPrice {
@@ -15,5 +45,19 @@ query ProductDetails($handle: String!) {
         currencyCode
       }
     }
+  }
+}
+
+fragment ProductDetailsVariant on ProductVariant {
+  id
+  title
+  availableForSale
+  price {
+    amount
+    currencyCode
+  }
+  selectedOptions {
+    name
+    value
   }
 }
