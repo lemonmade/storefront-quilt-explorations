@@ -26,7 +26,6 @@ body {
 }
 
 .Frame_Content {
-  padding: 1rem;
   position: relative;
 }
 
@@ -48,7 +47,7 @@ body {
 
 .ProductDetails {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 
