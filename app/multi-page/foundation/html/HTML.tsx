@@ -64,12 +64,8 @@ function Headers() {
         // In development, allow connections to local websockets for hot reloading.
         connectSources={
           Env.MODE === 'development'
-            ? [
-                "'self'",
-                `${isHttps ? 'ws' : 'wss'}://localhost:*`,
-                'https://admin4.myshopify.com',
-              ]
-            : ['https://admin4.myshopify.com']
+            ? ["'self'", `${isHttps ? 'ws' : 'wss'}://localhost:*`]
+            : ["'self'"]
         }
         // Includes `'unsafe-inline'` because CSS is often necessary in development,
         // and can be difficult to avoid in production.
