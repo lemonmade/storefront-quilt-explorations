@@ -26,6 +26,7 @@ body {
 }
 
 .Frame_Content {
+  padding: 1rem;
   position: relative;
 }
 
@@ -55,12 +56,14 @@ body {
   .ProductDetails {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
+  
+  .ProductDetails_Image {
+    position: sticky;
+    top: calc(var(--Frame-Header-block-size) + 1rem);
+  }
 }
 
 .ProductDetails_Image {
-  position: sticky;
-  top: calc(var(--Frame-Header-block-size) + 1rem);
-
   background-color: black;
   aspect-ratio: 1 / 1;
   display: flex;
