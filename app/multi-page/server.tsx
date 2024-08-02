@@ -51,6 +51,7 @@ router.get(async (request) => {
 
       const mainAssets = await assets.entry({
         cacheKey: await assets.cacheKey?.(request),
+        modules: response.assets.get({timing: 'load'}),
       });
 
       const htmlShell = renderToStaticMarkup(
