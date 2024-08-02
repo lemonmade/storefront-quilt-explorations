@@ -10,17 +10,19 @@ import type {HomeQueryData} from './HomeQuery.graphql';
 
 export function Home({products}: Pick<HomeQueryData, 'products'>) {
   return (
-    <Stack spacing>
-      <Heading>Recommended products!!</Heading>
+    <div class="Page">
+      <Stack spacing>
+        <Heading>Recommended products!!</Heading>
 
-      <ProductGrid>
-        {products.nodes.map((product) => {
-          return <ProductGridItem product={product} />;
-        })}
-      </ProductGrid>
+        <ProductGrid>
+          {products.nodes.map((product) => {
+            return <ProductGridItem product={product} />;
+          })}
+        </ProductGrid>
 
-      <BigHomeWidget />
-    </Stack>
+        <BigHomeWidget />
+      </Stack>
+    </div>
   );
 }
 
