@@ -20,7 +20,7 @@ export function ProductDetails({
   );
 
   return (
-    <div id="page_ProductDetails">
+    <div class="Page" id="page_ProductDetails">
       <Title>{product.title}</Title>
       {product.themeColor && <ThemeColor value={product.themeColor.value} />}
 
@@ -41,8 +41,8 @@ export function ProductDetails({
             value={selectedVariant.id}
           />
 
-          <h2>{product.title}</h2>
-          <p>{product.vendor}</p>
+          <h2 class="Heading">{product.title}</h2>
+          <p class="TextBlock">{product.vendor}</p>
 
           {product.options.map((option) => (
             <ProductDetailsOption
@@ -53,7 +53,9 @@ export function ProductDetails({
 
           <div>{formatMoney(selectedVariant.price)}</div>
 
-          <button type="submit">Buy it now</button>
+          <button class="Button" type="submit">
+            Buy it now
+          </button>
 
           <div
             dangerouslySetInnerHTML={{__html: product.descriptionHtml}}
@@ -111,7 +113,8 @@ function ProductDetailsOption({
               hx-params="none"
               hx-replace-url="true"
               hx-target="#page_ProductDetails"
-              hx-swap="innerHTML"
+              hx-indicator="#page_ProductDetails"
+              hx-swap="outerHTML"
             ></input>
             {value}
           </label>

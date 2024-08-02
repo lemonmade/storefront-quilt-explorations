@@ -15,7 +15,17 @@ export function Frame({children}: RenderableProps<{}>) {
   return (
     <div class="Frame">
       <header class="Frame_Header">
-        <Link to="/">Home</Link>
+        <nav class="Frame_Navigation">
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+
+            <li>
+              <Link to="/collections/all">Catalog</Link>
+            </li>
+          </ul>
+        </nav>
       </header>
       <div class="Frame_Content">
         <Suspense fallback={null}>{children}</Suspense>
